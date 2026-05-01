@@ -1,0 +1,700 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>sri_harini_r — junior_software_developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400;1,500&display=swap" rel="stylesheet" />
+<style>
+  *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0a0a0a;
+    --bg-2: #141414;
+    --bg-3: #1c1c1c;
+    --fg: #fafafa;
+    --fg-dim: #888;
+    --fg-mid: #c4c4c4;
+    --line: #2a2a2a;
+    --line-2: #3a3a3a;
+    --red: #ff3030;
+    --green: #00ff66;
+    --yellow: #ffd60a;
+    --blue: #58a6ff;
+    --pink: #f97583;
+    --purple: #d2a8ff;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'JetBrains Mono', ui-monospace, 'Courier New', monospace;
+    background: var(--bg);
+    color: var(--fg);
+    font-weight: 400;
+    line-height: 1.55;
+    font-size: 14px;
+    overflow-x: hidden;
+  }
+
+  /* CRT scanlines — subtle */
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    pointer-events: none;
+    z-index: 100;
+    background: repeating-linear-gradient(0deg, rgba(255,255,255,0.015) 0 1px, transparent 1px 3px);
+    mix-blend-mode: overlay;
+  }
+
+  ::selection { background: var(--green); color: var(--bg); }
+
+  a { color: var(--green); text-decoration: none; }
+  a:hover { background: var(--green); color: var(--bg); }
+
+  /* TITLE BAR */
+  .titlebar {
+    background: var(--bg-3);
+    border-bottom: 1px solid var(--line);
+    padding: 0.4rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 12px;
+    color: var(--fg-dim);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    backdrop-filter: blur(10px);
+  }
+  .titlebar .dots { display: flex; gap: 0.4rem; margin-right: 0.8rem; }
+  .titlebar .dots span { width: 12px; height: 12px; border-radius: 50%; }
+  .titlebar .dots .r { background: var(--red); }
+  .titlebar .dots .y { background: var(--yellow); }
+  .titlebar .dots .g { background: var(--green); }
+  .titlebar .path { color: var(--fg-mid); }
+  .titlebar .path span { color: var(--fg-dim); }
+  .titlebar .right { margin-left: auto; display: flex; gap: 1.5rem; }
+  .titlebar .right a { color: var(--fg-dim); transition: color 0.15s; }
+  .titlebar .right a:hover { background: transparent; color: var(--green); }
+
+  /* MAIN LAYOUT — sidebar + content */
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    min-height: calc(100vh - 30px);
+  }
+  @media (min-width: 880px) {
+    .layout { grid-template-columns: 240px 1fr; }
+  }
+
+  /* SIDEBAR — file explorer */
+  .sidebar {
+    background: var(--bg-2);
+    border-right: 1px solid var(--line);
+    padding: 1rem 0;
+    font-size: 13px;
+    position: sticky;
+    top: 30px;
+    align-self: start;
+    height: calc(100vh - 30px);
+    overflow-y: auto;
+  }
+  .sidebar .title {
+    padding: 0 1rem 0.5rem;
+    font-size: 10px;
+    color: var(--fg-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+  }
+  .tree { list-style: none; }
+  .tree > li { padding: 0; }
+  .tree .folder, .tree .file {
+    display: flex;
+    align-items: center;
+    padding: 0.25rem 1rem;
+    color: var(--fg-mid);
+    text-decoration: none;
+    transition: background 0.1s;
+    cursor: pointer;
+    font-size: 13px;
+  }
+  .tree .folder:hover, .tree .file:hover { background: var(--bg-3); color: var(--fg); }
+  .tree .folder { font-weight: 500; }
+  .tree .folder::before { content: '▾'; color: var(--fg-dim); margin-right: 0.4rem; font-size: 10px; }
+  .tree .file::before { content: ''; width: 16px; height: 1px; }
+  .tree .file::after { content: ''; }
+  .tree .nested { padding-left: 0.8rem; border-left: 1px dashed var(--line-2); margin-left: 1rem; }
+  .tree .nested .file { padding-left: 0.5rem; color: var(--fg-mid); }
+  .tree .ext-md { color: var(--blue); }
+  .tree .ext-c { color: var(--purple); }
+  .tree .ext-js { color: var(--yellow); }
+  .tree .ext-py { color: var(--green); }
+  .tree .file.active { background: var(--bg-3); color: var(--fg); border-left: 2px solid var(--green); padding-left: calc(0.5rem - 2px); }
+
+  /* CONTENT */
+  main { padding: 0; }
+
+  .tab-bar {
+    background: var(--bg-2);
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    overflow-x: auto;
+  }
+  .tab {
+    padding: 0.6rem 1.2rem;
+    border-right: 1px solid var(--line);
+    color: var(--fg-dim);
+    font-size: 12px;
+    white-space: nowrap;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .tab.active { background: var(--bg); color: var(--fg); border-top: 2px solid var(--green); padding-top: calc(0.6rem - 2px); }
+  .tab .x { color: var(--fg-dim); font-size: 11px; }
+
+  .content {
+    padding: clamp(1.5rem, 3vw, 2.5rem) clamp(1.25rem, 4vw, 3rem);
+    max-width: 1100px;
+  }
+
+  /* HERO — terminal session */
+  .hero {
+    padding: clamp(1.5rem, 3vw, 2.5rem) 0 clamp(2rem, 4vw, 3rem);
+    border-bottom: 1px dashed var(--line);
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+  }
+  .term-line { display: flex; align-items: baseline; gap: 0.5rem; margin-bottom: 0.3rem; }
+  .term-line .prompt { color: var(--green); }
+  .term-line .cmd { color: var(--fg); }
+  .term-line .out { color: var(--fg-mid); padding-left: 0; }
+  .term-line .comment { color: var(--fg-dim); font-style: italic; }
+
+  .ascii-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    color: var(--fg);
+    font-size: clamp(2.4rem, 7vw, 5.5rem);
+    line-height: 1;
+    letter-spacing: -0.04em;
+    margin: 1.5rem 0 0.5rem;
+    word-break: break-all;
+  }
+  .ascii-name .accent { color: var(--green); }
+  .ascii-name .red { color: var(--red); }
+  .ascii-name .cursor { color: var(--green); animation: blink 1s steps(2) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .role {
+    color: var(--fg-dim);
+    font-size: 13px;
+    margin-top: 0.3rem;
+  }
+  .role .tag { color: var(--green); }
+  .role .red { color: var(--red); }
+
+  .typed { display: inline-block; }
+
+  /* SECTION HEADERS — // commented section markers */
+  .section-h {
+    margin: clamp(2.5rem, 5vw, 4rem) 0 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px dashed var(--line);
+  }
+  .section-h .marker {
+    color: var(--fg-dim);
+    font-size: 12px;
+    margin-bottom: 0.4rem;
+  }
+  .section-h .marker .green { color: var(--green); }
+  .section-h .marker .red { color: var(--red); }
+  .section-h h2 {
+    font-size: clamp(1.6rem, 3vw, 2.3rem);
+    font-weight: 700;
+    color: var(--fg);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+  .section-h h2 .at { color: var(--red); }
+
+  /* BIO block — looks like docstring */
+  .docstring {
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--green);
+    padding: 1.2rem 1.4rem;
+    font-size: 13px;
+    color: var(--fg-mid);
+    line-height: 1.7;
+    max-width: 72ch;
+  }
+  .docstring .quote { color: var(--fg-dim); }
+  .docstring p + p { margin-top: 0.8rem; }
+  .docstring .h { color: var(--green); }
+  .docstring .h-r { color: var(--red); }
+  .docstring .h-y { color: var(--yellow); }
+  .docstring .h-b { color: var(--blue); }
+
+  /* SKILLS — code-style */
+  .code-block {
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    overflow: hidden;
+  }
+  .code-block .head {
+    background: var(--bg-3);
+    padding: 0.4rem 1rem;
+    border-bottom: 1px solid var(--line);
+    font-size: 11px;
+    color: var(--fg-dim);
+    display: flex;
+    justify-content: space-between;
+  }
+  .code-block .head .lang { color: var(--green); }
+  .code-block pre {
+    padding: 1.2rem 1.4rem;
+    font-size: 13px;
+    line-height: 1.7;
+    overflow-x: auto;
+    color: var(--fg);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .kw { color: var(--purple); }
+  .str { color: var(--yellow); }
+  .num { color: var(--pink); }
+  .fn { color: var(--blue); }
+  .com { color: var(--fg-dim); font-style: italic; }
+  .var { color: var(--fg); }
+  .op { color: var(--fg-mid); }
+  .gd { color: var(--green); }
+  .rd { color: var(--red); }
+
+  /* PROJECTS */
+  .projects { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+  @media (min-width: 760px) { .projects { grid-template-columns: 1fr 1fr; } }
+  .proj {
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    transition: border-color 0.15s;
+    position: relative;
+  }
+  .proj:hover { border-color: var(--green); }
+  .proj .head {
+    background: var(--bg-3);
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: var(--fg-dim);
+  }
+  .proj .head .award { color: var(--yellow); }
+  .proj .body { padding: 1.2rem 1.4rem; }
+  .proj h3 {
+    font-size: 1.15rem;
+    color: var(--fg);
+    font-weight: 700;
+    margin-bottom: 0.6rem;
+  }
+  .proj h3 .star { color: var(--green); }
+  .proj p { font-size: 13px; color: var(--fg-mid); line-height: 1.65; }
+  .proj .tags { margin-top: 0.9rem; display: flex; gap: 0.4rem; flex-wrap: wrap; font-size: 11px; }
+  .proj .tags span { color: var(--purple); }
+  .proj .tags span::before { content: '@'; color: var(--fg-dim); }
+
+  /* TIMELINE — log-style */
+  .log-list {
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+  }
+  .log-row {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1rem;
+    padding: 0.85rem 1.4rem;
+    border-bottom: 1px solid var(--line);
+    font-size: 13px;
+    transition: background 0.15s;
+  }
+  @media (min-width: 760px) { .log-row { grid-template-columns: 180px 1fr; gap: 2rem; } }
+  .log-row:last-child { border-bottom: none; }
+  .log-row:hover { background: var(--bg-3); }
+  .log-row .ts { color: var(--green); white-space: nowrap; font-size: 12px; }
+  .log-row .msg { color: var(--fg-mid); line-height: 1.5; }
+  .log-row .msg strong { color: var(--fg); font-weight: 500; }
+  .log-row .lvl {
+    display: inline-block;
+    font-size: 10px;
+    padding: 0.1rem 0.45rem;
+    margin-right: 0.4rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .log-row .lvl.info { background: var(--blue); color: var(--bg); }
+  .log-row .lvl.ok { background: var(--green); color: var(--bg); }
+  .log-row .lvl.warn { background: var(--yellow); color: var(--bg); }
+  .log-row .lvl.win { background: var(--red); color: var(--fg); }
+
+  /* INTERESTS */
+  .interests {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+  @media (min-width: 600px) { .interests { grid-template-columns: repeat(4, 1fr); } }
+  .interest {
+    background: var(--bg-2);
+    padding: 1.5rem;
+    text-align: center;
+    transition: background 0.15s, color 0.15s;
+  }
+  .interest:hover { background: var(--green); color: var(--bg); }
+  .interest .ico { font-size: 1.8rem; line-height: 1; margin-bottom: 0.5rem; color: var(--green); }
+  .interest:hover .ico { color: var(--bg); }
+  .interest .lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 0.2em; color: var(--fg-dim); }
+  .interest:hover .lbl { color: var(--bg); }
+
+  /* CONTACT */
+  .contact-block {
+    background: var(--bg-2);
+    border: 1px solid var(--green);
+    padding: 1.5rem;
+    font-size: 13px;
+    line-height: 1.9;
+  }
+  .contact-block .row { display: flex; gap: 0.8rem; }
+  .contact-block .row .k { color: var(--fg-dim); width: 90px; flex-shrink: 0; }
+  .contact-block .row .v { color: var(--fg); }
+  .contact-block .row .v a { color: var(--green); }
+
+  /* FOOTER */
+  footer {
+    margin-top: clamp(3rem, 6vw, 5rem);
+    padding-top: 2rem;
+    border-top: 1px dashed var(--line);
+    font-size: 11px;
+    color: var(--fg-dim);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+  }
+  footer span { color: var(--fg-mid); }
+  footer .green { color: var(--green); }
+
+  /* GLITCH HOVER */
+  .glitch:hover {
+    animation: glitch 0.3s steps(2);
+  }
+  @keyframes glitch {
+    0% { transform: translate(0); text-shadow: none; }
+    25% { transform: translate(-2px, 1px); text-shadow: 2px 0 var(--red), -2px 0 var(--green); }
+    50% { transform: translate(2px, -1px); text-shadow: -2px 0 var(--red), 2px 0 var(--green); }
+    100% { transform: translate(0); text-shadow: none; }
+  }
+
+  .ascii-divider {
+    color: var(--fg-dim);
+    font-size: 12px;
+    line-height: 1;
+    margin: 2rem 0;
+    overflow: hidden;
+    user-select: none;
+    white-space: nowrap;
+  }
+  .ascii-divider span { color: var(--green); }
+
+  .back-link {
+    color: var(--fg-dim);
+    text-decoration: none;
+    font-size: 12px;
+  }
+  .back-link:hover { color: var(--green); background: transparent; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ascii-name .cursor { animation: none; }
+    .glitch:hover { animation: none; }
+    body::after { display: none; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<div class="titlebar">
+  <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+  <div class="path"><span>~/</span>portfolio<span>/</span>sri_harini_r<span>/</span><span style="color:var(--green)">README.md</span></div>
+  <div class="right">
+    <a class="back-link" href="index.html">← variants</a>
+  </div>
+</div>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="title">Explorer</div>
+    <ul class="tree">
+      <li><div class="folder">sri_harini_r</div>
+        <ul class="tree nested">
+          <li><a class="file ext-md active" href="#hero">📄 README.md</a></li>
+          <li><a class="file ext-md" href="#about">📄 about.md</a></li>
+          <li><a class="file ext-c" href="#skills">📄 skills.json</a></li>
+          <li><div class="folder">projects/</div>
+            <ul class="tree nested">
+              <li><a class="file ext-c" href="#proj-1">📄 contact_mgmt.c</a></li>
+              <li><a class="file ext-js" href="#proj-2">📄 music_site.html</a></li>
+            </ul>
+          </li>
+          <li><a class="file ext-md" href="#edu">📄 education.log</a></li>
+          <li><a class="file ext-md" href="#certs">📄 certs.log</a></li>
+          <li><a class="file ext-md" href="#wins">📄 achievements.log</a></li>
+          <li><a class="file ext-py" href="#fun">📄 hobbies.py</a></li>
+          <li><a class="file ext-md" href="#contact">📄 contact.txt</a></li>
+        </ul>
+      </li>
+    </ul>
+  </aside>
+
+  <!-- CONTENT -->
+  <main>
+    <div class="tab-bar">
+      <div class="tab active">📄 README.md <span class="x">✕</span></div>
+      <div class="tab">📄 about.md <span class="x">✕</span></div>
+    </div>
+
+    <div class="content">
+
+      <!-- HERO -->
+      <section class="hero" id="hero">
+        <div class="term-line"><span class="prompt">$</span> <span class="cmd">whoami</span></div>
+        <div class="term-line"><span class="out">> sri_harini_r</span></div>
+        <div class="term-line"><span class="prompt">$</span> <span class="cmd">cat role.txt</span></div>
+        <div class="term-line"><span class="out">> junior_software_developer</span></div>
+        <div class="term-line"><span class="prompt">$</span> <span class="cmd">./introduce.sh</span></div>
+
+        <h1 class="ascii-name">sri<span class="accent">_</span>harini<span class="red">_</span>r<span class="cursor">▊</span></h1>
+
+        <p class="role">
+          <span class="tag">[role]</span> junior software developer
+          <span class="red">·</span>
+          <span class="tag">[loc]</span> erode, tn, india
+          <span class="red">·</span>
+          <span class="tag">[status]</span> open_to_work
+        </p>
+
+        <div class="term-line" style="margin-top: 1.5rem;"><span class="prompt">$</span> <span class="comment">// scroll for the rest. or click around the explorer ←</span></div>
+      </section>
+
+      <div class="ascii-divider">─────── <span>// 01</span> ───── about ────────────────────────────────────────────────────────</div>
+
+      <!-- ABOUT -->
+      <section id="about">
+        <div class="section-h">
+          <div class="marker">// <span class="green">section</span> 01 <span class="red">@</span> about</div>
+          <h2 class="glitch">about<span class="at">.</span>md</h2>
+        </div>
+        <div class="docstring">
+          <p><span class="quote">"""</span></p>
+          <p>final-year <span class="h">B.Tech IT</span> student at velalar college of engineering, anna university — graduating <span class="h-y">2025</span> with <span class="h">CGPA 8.0</span>. based in <span class="h-r">erode, tamil nadu</span>.</p>
+          <p>i write <span class="h">java</span>, <span class="h-y">javascript</span>, <span class="h">python</span>, and a little <span class="h-b">flutter</span> when an app needs to feel snappy. won "best project" with a contact-management system in pure C, made the national finals at the india women-only hackathon, took <span class="h-r">first prize</span> at think outside the box.</p>
+          <p>looking for: <span class="h">junior dev roles</span>, internships, and small interesting problems.</p>
+          <p><span class="quote">"""</span></p>
+        </div>
+      </section>
+
+      <div class="ascii-divider">─────── <span>// 02</span> ───── stack ────────────────────────────────────────────────────────</div>
+
+      <!-- SKILLS -->
+      <section id="skills">
+        <div class="section-h">
+          <div class="marker">// <span class="green">section</span> 02 <span class="red">@</span> stack</div>
+          <h2 class="glitch">skills<span class="at">.</span>json</h2>
+        </div>
+        <div class="code-block">
+          <div class="head"><span>skills.json</span><span class="lang">json</span></div>
+          <pre><span class="op">{</span>
+  <span class="str">"languages"</span><span class="op">:</span> <span class="op">[</span><span class="str">"Java"</span><span class="op">,</span> <span class="str">"Python"</span><span class="op">,</span> <span class="str">"JavaScript"</span><span class="op">,</span> <span class="str">"C"</span><span class="op">,</span> <span class="str">"C++"</span><span class="op">]</span><span class="op">,</span>
+  <span class="str">"web"</span><span class="op">:</span> <span class="op">[</span><span class="str">"HTML"</span><span class="op">,</span> <span class="str">"CSS"</span><span class="op">,</span> <span class="str">"Node.js"</span><span class="op">]</span><span class="op">,</span>
+  <span class="str">"mobile"</span><span class="op">:</span> <span class="op">[</span><span class="str">"React Native"</span><span class="op">,</span> <span class="str">"Flutter"</span><span class="op">]</span><span class="op">,</span>
+  <span class="str">"tools"</span><span class="op">:</span> <span class="op">[</span><span class="str">"VS Code"</span><span class="op">,</span> <span class="str">"Figma"</span><span class="op">,</span> <span class="str">"Git"</span><span class="op">,</span> <span class="str">"MS Office"</span><span class="op">]</span><span class="op">,</span>
+  <span class="str">"languages_human"</span><span class="op">:</span> <span class="op">{</span>
+    <span class="str">"tamil"</span><span class="op">:</span> <span class="str">"native"</span><span class="op">,</span>
+    <span class="str">"english"</span><span class="op">:</span> <span class="str">"proficient"</span>
+  <span class="op">}</span><span class="op">,</span>
+  <span class="str">"learning"</span><span class="op">:</span> <span class="op">[</span><span class="str">"backend systems"</span><span class="op">,</span> <span class="str">"design tokens"</span><span class="op">]</span>
+<span class="op">}</span></pre>
+        </div>
+      </section>
+
+      <div class="ascii-divider">─────── <span>// 03</span> ───── projects ─────────────────────────────────────────────────────</div>
+
+      <!-- PROJECTS -->
+      <section>
+        <div class="section-h">
+          <div class="marker">// <span class="green">section</span> 03 <span class="red">@</span> projects</div>
+          <h2 class="glitch">projects<span class="at">/</span></h2>
+        </div>
+        <div class="projects">
+
+          <article class="proj" id="proj-1">
+            <div class="head"><span>contact_mgmt.c</span><span class="award">★ best_project · 2022-23</span></div>
+            <div class="body">
+              <h3><span class="star">▸</span> Contact Management System</h3>
+              <p>console-driven contact directory in pure C with file-based persistence. add / search / edit / delete / serialize. won best project at the dept level — also where i learned to take memory seriously.</p>
+              <div class="tags"><span>C</span><span>file_io</span><span>cli</span></div>
+            </div>
+          </article>
+
+          <article class="proj" id="proj-2">
+            <div class="head"><span>music_site/index.html</span><span class="award">★ college_expo · apr 2023</span></div>
+            <div class="body">
+              <h3><span class="star">▸</span> Music Website</h3>
+              <p>static music-discovery site for the college expo — curated playlists, artist pages, embedded player. the thing i love most (sound) finding its way into what i build.</p>
+              <div class="tags"><span>HTML</span><span>CSS</span><span>JS</span></div>
+            </div>
+          </article>
+
+        </div>
+      </section>
+
+      <div class="ascii-divider">─────── <span>// 04</span> ───── education ────────────────────────────────────────────────────</div>
+
+      <!-- EDUCATION -->
+      <section id="edu">
+        <div class="section-h">
+          <div class="marker">// <span class="green">section</span> 04 <span class="red">@</span> education</div>
+          <h2 class="glitch">education<span class="at">.</span>log</h2>
+        </div>
+        <div class="log-list">
+          <div class="log-row">
+            <div class="ts">2021-2025</div>
+            <div class="msg"><span class="lvl ok">edu</span><strong>B.Tech, Information Technology</strong> — Velalar College of Engineering &amp; Technology, Anna University. CGPA 8.0.</div>
+          </div>
+          <div class="log-row">
+            <div class="ts">HSC</div>
+            <div class="msg"><span class="lvl info">edu</span><strong>Class XII</strong> — Tamil Nadu State Board. <em style="color:var(--green)">82%</em></div>
+          </div>
+          <div class="log-row">
+            <div class="ts">SSLC</div>
+            <div class="msg"><span class="lvl info">edu</span><strong>Class X</strong> — Tamil Nadu State Board. <em style="color:var(--green)">75%</em></div>
+          </div>
+        </div>
+      </section>
+
+      <div class="ascii-divider">─────── <span>// 05</span> ───── certifications ────────────────────────────────────────────────</div>
+
+      <!-- CERTIFICATIONS -->
+      <section id="certs">
+        <div class="section-h">
+          <div class="marker">// <span class="green">section</span> 05 <span class="red">@</span> certifications</div>
+          <h2 class="glitch">certs<span class="at">.</span>log</h2>
+        </div>
+        <div class="log-list">
+          <div class="log-row">
+            <div class="ts">NPTEL</div>
+            <div class="msg"><span class="lvl ok">cert</span><strong>Industry 4.0 &amp; Industrial IoT</strong> — 8-week program on connected manufacturing systems.</div>
+          </div>
+          <div class="log-row">
+            <div class="ts">TechVolt 2025</div>
+            <div class="msg"><span class="lvl ok">cert</span><strong>Full Stack Development</strong> — 3-month internship-track training, modern web stack.</div>
+          </div>
+          <div class="log-row">
+            <div class="ts">IIT Bombay</div>
+            <div class="msg"><span class="lvl ok">cert</span><strong>Python · HTML · C — Workshop Series</strong> + focused PHP workshop. Foundations re-laid sharper.</div>
+          </div>
+        </div>
+      </section>
+
+      <div class="ascii-divider">─────── <span>// 06</span> ───── achievements ───────────────────────────────────────────────────</div>
+
+      <!-- ACHIEVEMENTS -->
+      <section id="wins">
+        <div class="section-h">
+          <div class="marker">// <span class="green">section</span> 06 <span class="red">@</span> wins</div>
+          <h2 class="glitch">achievements<span class="at">.</span>log</h2>
+        </div>
+        <div class="log-list">
+          <div class="log-row">
+            <div class="ts">national</div>
+            <div class="msg"><span class="lvl win">★</span><strong>India Women-Only Hackathon</strong> — reached the national finals among an all-women cohort of student devs.</div>
+          </div>
+          <div class="log-row">
+            <div class="ts">oct 2023</div>
+            <div class="msg"><span class="lvl win">1st</span><strong>Think Outside The Box</strong> — first prize in inter-college creative problem-solving contest.</div>
+          </div>
+          <div class="log-row">
+            <div class="ts">sport</div>
+            <div class="msg"><span class="lvl warn">merit</span><strong>Volleyball — Merit</strong> — played for the college team; awarded for sustained presence on court.</div>
+          </div>
+          <div class="log-row">
+            <div class="ts">service</div>
+            <div class="msg"><span class="lvl info">club</span><strong>Rotaract Club Member</strong> — active in community service drives across Erode and the wider district.</div>
+          </div>
+        </div>
+      </section>
+
+      <div class="ascii-divider">─────── <span>// 07</span> ───── hobbies ──────────────────────────────────────────────────────</div>
+
+      <!-- INTERESTS -->
+      <section id="fun">
+        <div class="section-h">
+          <div class="marker">// <span class="green">section</span> 07 <span class="red">@</span> hobbies</div>
+          <h2 class="glitch">hobbies<span class="at">.</span>py</h2>
+        </div>
+        <div class="code-block" style="margin-bottom: 1rem;">
+          <div class="head"><span>hobbies.py</span><span class="lang">python</span></div>
+          <pre><span class="kw">def</span> <span class="fn">when_offline</span><span class="op">():</span>
+    <span class="kw">return</span> <span class="op">[</span><span class="str">"music"</span><span class="op">,</span> <span class="str">"drawing"</span><span class="op">,</span> <span class="str">"cinema"</span><span class="op">,</span> <span class="str">"gaming"</span><span class="op">]</span>  <span class="com"># in no particular order</span></pre>
+        </div>
+        <div class="interests">
+          <div class="interest"><div class="ico">♪</div><div class="lbl">music</div></div>
+          <div class="interest"><div class="ico">✎</div><div class="lbl">drawing</div></div>
+          <div class="interest"><div class="ico">▶</div><div class="lbl">cinema</div></div>
+          <div class="interest"><div class="ico">◉</div><div class="lbl">gaming</div></div>
+        </div>
+      </section>
+
+      <div class="ascii-divider">─────── <span>// 08</span> ───── contact ──────────────────────────────────────────────────────</div>
+
+      <!-- CONTACT -->
+      <section id="contact">
+        <div class="section-h">
+          <div class="marker">// <span class="green">section</span> 08 <span class="red">@</span> get_in_touch</div>
+          <h2 class="glitch">contact<span class="at">.</span>txt</h2>
+        </div>
+        <div class="contact-block">
+          <div class="row"><span class="k">$ email</span><span class="v"><a href="mailto:sriharini.dev.in@gmail.com">sriharini.dev.in@gmail.com</a></span></div>
+          <div class="row"><span class="k">$ phone</span><span class="v"><a href="tel:+919865658292">+91 98656 58292</a></span></div>
+          <div class="row"><span class="k">$ location</span><span class="v">Erode, Tamil Nadu, India</span></div>
+          <div class="row"><span class="k">$ status</span><span class="v" style="color:var(--green)">● open_to_work</span></div>
+          <div class="row"><span class="k">$ response</span><span class="v">usually within 24h</span></div>
+        </div>
+      </section>
+
+      <footer>
+        <span># sri_harini_r · 2026</span>
+        <span>built with <span class="green">html + css</span> · no build step</span>
+        <span>hand-typed in JetBrains Mono</span>
+      </footer>
+
+    </div>
+  </main>
+</div>
+
+<script>
+  // Make file tree clicks scroll smoothly + activate
+  document.querySelectorAll('.tree .file').forEach(file => {
+    file.addEventListener('click', (e) => {
+      document.querySelectorAll('.tree .file').forEach(f => f.classList.remove('active'));
+      file.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

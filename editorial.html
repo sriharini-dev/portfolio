@@ -1,0 +1,632 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sri Harini R — Junior Software Developer</title>
+<meta name="description" content="Portfolio of Sri Harini R, B.Tech IT graduate, Junior Software Developer based in Erode, Tamil Nadu." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+<style>
+  *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --paper: #f5f1e8;
+    --paper-dark: #ebe5d6;
+    --ink: #1a1a1a;
+    --ink-soft: #4a4845;
+    --olive: #6b7c4a;
+    --olive-deep: #4d5a35;
+    --rule: #c8bfa6;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'EB Garamond', Georgia, serif;
+    background: var(--paper);
+    color: var(--ink);
+    font-size: clamp(17px, 1.2vw, 19px);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+  /* subtle paper texture */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: radial-gradient(rgba(0,0,0,0.025) 1px, transparent 1px);
+    background-size: 3px 3px;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .frame { max-width: 1200px; margin: 0 auto; padding: clamp(2rem, 5vw, 4rem) clamp(1.5rem, 5vw, 4rem); position: relative; z-index: 2; }
+
+  /* MASTHEAD */
+  .masthead {
+    border-top: 3px double var(--ink);
+    border-bottom: 1px solid var(--ink);
+    padding: 1rem 0;
+    margin-bottom: clamp(2rem, 5vw, 3.5rem);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--ink);
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .masthead .left { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+  .masthead a { color: inherit; text-decoration: none; transition: color 0.3s; }
+  .masthead a:hover { color: var(--olive); }
+
+  /* HERO */
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-bottom: clamp(3rem, 8vw, 6rem);
+  }
+  @media (min-width: 880px) {
+    .hero { grid-template-columns: 1fr auto; align-items: end; }
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 400;
+    font-size: clamp(3.6rem, 13vw, 11rem);
+    line-height: 0.86;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+  }
+  .hero h1 em { font-style: italic; color: var(--olive); font-weight: 400; }
+  .hero h1 .amp { font-family: 'EB Garamond', serif; font-style: italic; }
+  .hero .stamp {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
+    color: var(--ink-soft);
+    text-align: right;
+    line-height: 1.4;
+    border-left: 1px solid var(--rule);
+    padding-left: 1.5rem;
+    max-width: 22ch;
+  }
+  .hero .stamp .num {
+    display: block;
+    font-style: normal;
+    font-size: 0.72rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--olive);
+    margin-bottom: 0.4rem;
+  }
+
+  .deck {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.2rem, 2.2vw, 1.65rem);
+    line-height: 1.45;
+    max-width: 38ch;
+    color: var(--ink-soft);
+    margin-bottom: clamp(2.5rem, 6vw, 4.5rem);
+  }
+  .deck::before {
+    content: '— ';
+    color: var(--olive);
+  }
+
+  /* SECTION HEADERS — like chapter markers */
+  .section-head {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 1.5rem;
+    margin: clamp(3rem, 6vw, 5rem) 0 clamp(1.5rem, 3vw, 2.5rem);
+    font-family: 'Playfair Display', serif;
+  }
+  .section-head .num {
+    font-style: italic;
+    color: var(--olive);
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+  }
+  .section-head .rule {
+    height: 1px;
+    background: var(--rule);
+  }
+  .section-head .name {
+    font-size: clamp(1.3rem, 2.4vw, 1.85rem);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+
+  /* ABOUT */
+  .about {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  @media (min-width: 760px) {
+    .about { grid-template-columns: 1fr 2.4fr; gap: 4rem; }
+  }
+  .about .label {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: var(--olive);
+    font-size: 1rem;
+    border-top: 1px solid var(--rule);
+    padding-top: 0.8rem;
+  }
+  .about .body {
+    font-size: clamp(1.05rem, 1.4vw, 1.18rem);
+    line-height: 1.7;
+  }
+  .about .body p:first-child::first-letter {
+    font-family: 'Playfair Display', serif;
+    font-size: 4.6em;
+    float: left;
+    line-height: 0.85;
+    padding: 0.05em 0.12em 0 0;
+    color: var(--olive);
+    font-weight: 400;
+  }
+  .about .body p + p { margin-top: 1rem; }
+
+  /* SKILLS — three-column tabular */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+  }
+  @media (min-width: 760px) {
+    .skills-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  .skills-grid .col {
+    padding: 1.5rem 1.5rem 1.5rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  @media (min-width: 760px) {
+    .skills-grid .col { border-bottom: none; border-right: 1px solid var(--rule); padding: 1.5rem; }
+    .skills-grid .col:last-child { border-right: none; }
+    .skills-grid .col:first-child { padding-left: 0; }
+  }
+  .skills-grid h3 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 400;
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--olive);
+    margin-bottom: 0.8rem;
+  }
+  .skills-grid ul { list-style: none; }
+  .skills-grid li {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.2rem, 1.8vw, 1.5rem);
+    line-height: 1.5;
+    color: var(--ink);
+  }
+
+  /* PROJECTS */
+  .project {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: clamp(2rem, 4vw, 3rem) 0;
+    border-top: 1px solid var(--rule);
+  }
+  @media (min-width: 760px) {
+    .project { grid-template-columns: 1fr 2fr; gap: 4rem; }
+  }
+  .project:last-child { border-bottom: 1px solid var(--rule); }
+  .project .meta {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  .project .meta .award {
+    display: inline-block;
+    background: var(--olive);
+    color: var(--paper);
+    padding: 0.15rem 0.6rem;
+    margin-top: 0.6rem;
+    font-style: normal;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .project h3 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 400;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    line-height: 1;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.8rem;
+  }
+  .project h3 em { font-style: italic; color: var(--olive); }
+  .project p {
+    font-size: clamp(1rem, 1.3vw, 1.12rem);
+    line-height: 1.65;
+    color: var(--ink-soft);
+    max-width: 56ch;
+  }
+
+  /* PULL QUOTE */
+  .pull {
+    text-align: center;
+    margin: clamp(3rem, 6vw, 5rem) 0;
+    padding: clamp(2rem, 4vw, 3rem) 0;
+    border-top: 3px double var(--ink);
+    border-bottom: 3px double var(--ink);
+  }
+  .pull blockquote {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.6rem, 4vw, 3rem);
+    line-height: 1.25;
+    max-width: 22ch;
+    margin: 0 auto;
+    letter-spacing: -0.005em;
+  }
+  .pull blockquote::before { content: '“'; color: var(--olive); }
+  .pull blockquote::after { content: '”'; color: var(--olive); }
+  .pull cite {
+    display: block;
+    margin-top: 1rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    font-style: normal;
+    color: var(--olive);
+    font-family: 'Playfair Display', serif;
+  }
+
+  /* TWO-COLUMN LIST SECTIONS (education, certifications, achievements) */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+  @media (min-width: 760px) {
+    .two-col { grid-template-columns: 1fr 1fr; gap: 5rem; }
+  }
+  .entry {
+    padding-bottom: 1.3rem;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 1.3rem;
+  }
+  .entry:last-child { border-bottom: none; margin-bottom: 0; }
+  .entry .when {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--olive);
+    letter-spacing: 0.05em;
+    margin-bottom: 0.3rem;
+  }
+  .entry h4 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 400;
+    font-size: clamp(1.15rem, 1.7vw, 1.35rem);
+    line-height: 1.25;
+    margin-bottom: 0.3rem;
+  }
+  .entry p {
+    color: var(--ink-soft);
+    font-size: 0.98rem;
+    line-height: 1.55;
+  }
+
+  /* INTERESTS — typographic flourish */
+  .interests {
+    text-align: center;
+    padding: clamp(2rem, 5vw, 4rem) 0;
+  }
+  .interests p {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(2rem, 6vw, 5rem);
+    line-height: 1.1;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .interests p span:nth-child(odd) { color: var(--olive); }
+  .interests p .sep { color: var(--rule); font-style: normal; padding: 0 0.3em; }
+
+  /* COLOPHON */
+  .colophon {
+    margin-top: clamp(4rem, 8vw, 6rem);
+    padding-top: 2rem;
+    border-top: 3px double var(--ink);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    font-family: 'Playfair Display', serif;
+  }
+  @media (min-width: 760px) {
+    .colophon { grid-template-columns: repeat(3, 1fr); }
+  }
+  .colophon .block .label {
+    font-style: italic;
+    color: var(--olive);
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.4rem;
+  }
+  .colophon .block .val {
+    font-size: 1.05rem;
+    color: var(--ink);
+  }
+  .colophon .block .val a {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px solid var(--rule);
+    transition: border-color 0.3s;
+  }
+  .colophon .block .val a:hover { border-color: var(--olive); }
+
+  .imprint {
+    text-align: center;
+    margin-top: 3rem;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+    letter-spacing: 0.05em;
+  }
+  .imprint span { color: var(--olive); }
+
+  /* reveals */
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.9s ease, transform 0.9s cubic-bezier(.2,.7,.2,1); }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+    html { scroll-behavior: auto; }
+  }
+
+  /* back link */
+  .back {
+    position: fixed;
+    top: 1rem; left: 1rem;
+    z-index: 10;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    text-decoration: none;
+    background: var(--paper);
+    padding: 0.4rem 0.8rem;
+    border: 1px solid var(--rule);
+  }
+  .back:hover { color: var(--olive); border-color: var(--olive); }
+</style>
+</head>
+<body>
+<a class="back" href="index.html">← variants</a>
+
+<div class="frame">
+
+  <nav class="masthead reveal">
+    <div class="left">
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#work">Work</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <div>Vol. I · No. 01 · MMXXVI</div>
+  </nav>
+
+  <section class="hero">
+    <h1 class="reveal">Sri<br/>Harini <em>R</em><span class="amp">.</span></h1>
+    <div class="stamp reveal">
+      <span class="num">Volume I · 2026</span>
+      A junior software developer<br/>working from Erode,<br/>Tamil Nadu — building<br/>quietly, learning loudly.
+    </div>
+  </section>
+
+  <p class="deck reveal">
+    Final-year B.Tech IT graduate at Velalar College of Engineering. Comfortable across the stack, curious about everything that compiles, and genuinely glad you stopped by.
+  </p>
+
+  <!-- ABOUT -->
+  <div class="section-head reveal" id="about">
+    <span class="num">i.</span><span class="rule"></span><span class="name">An Introduction</span>
+  </div>
+  <section class="about">
+    <div class="label reveal">Notes from the desk</div>
+    <div class="body reveal">
+      <p>
+        I am a final-year Information Technology student at Velalar College of Engineering (Anna University), graduating in 2025 with a CGPA of 8.0. My work sits at the intersection of practical software craft and curious experimentation — I write Java for the foundations, JavaScript for the surfaces, and a little Python whenever a problem deserves a clever shortcut.
+      </p>
+      <p>
+        Outside of code: I draw, I listen, I watch, I play. The same pattern-finding reflex that makes me good at debugging is what makes a film, a melody, or a well-designed game feel like home.
+      </p>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <div class="section-head reveal" id="skills">
+    <span class="num">ii.</span><span class="rule"></span><span class="name">Vocabulary</span>
+  </div>
+  <section class="skills-grid reveal">
+    <div class="col">
+      <h3>Languages</h3>
+      <ul>
+        <li>Java</li><li>Python</li><li>JavaScript</li><li>C / C++</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h3>Frameworks &amp; Web</h3>
+      <ul>
+        <li>HTML &amp; CSS</li><li>Node.js</li><li>React Native</li><li>Flutter</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h3>Tools of trade</h3>
+      <ul>
+        <li>VS Code</li><li>Figma</li><li>MS Office</li><li>Git, terminal</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- WORK / PROJECTS -->
+  <div class="section-head reveal" id="work">
+    <span class="num">iii.</span><span class="rule"></span><span class="name">Selected Works</span>
+  </div>
+
+  <article class="project reveal">
+    <div class="meta">
+      <div>2022 — 2023</div>
+      <div>Built in C, single author</div>
+      <span class="award">Best Project · Department</span>
+    </div>
+    <div>
+      <h3>Contact <em>Management</em> System</h3>
+      <p>
+        A console-driven contact directory written in C with file-based persistence — add, search, edit, delete, and serialize records to disk. The project I lean on whenever someone asks where I learned to take memory seriously.
+      </p>
+    </div>
+  </article>
+
+  <article class="project reveal">
+    <div class="meta">
+      <div>April 2023</div>
+      <div>HTML, CSS, JavaScript</div>
+      <span class="award">College Expo · Showcased</span>
+    </div>
+    <div>
+      <h3>Music <em>Website</em></h3>
+      <p>
+        A static music-discovery site built for the college expo — curated playlists, artist pages, and an embedded player. A reminder that the things I love (sound, image, type) all eventually find their way into what I build.
+      </p>
+    </div>
+  </article>
+
+  <!-- PULL QUOTE -->
+  <aside class="pull reveal">
+    <blockquote>I write the code that I wish someone had written for me when I was learning.</blockquote>
+    <cite>— working principle</cite>
+  </aside>
+
+  <!-- EDUCATION & CERTIFICATIONS -->
+  <div class="section-head reveal">
+    <span class="num">iv.</span><span class="rule"></span><span class="name">Studies &amp; Credentials</span>
+  </div>
+  <section class="two-col reveal">
+    <div>
+      <div class="entry">
+        <div class="when">2021 — 2025 · Erode</div>
+        <h4>B.Tech, Information Technology</h4>
+        <p>Velalar College of Engineering &amp; Technology, Anna University. CGPA 8.0.</p>
+      </div>
+      <div class="entry">
+        <div class="when">Higher Secondary · 82%</div>
+        <h4>Class XII</h4>
+        <p>Tamil Nadu State Board.</p>
+      </div>
+      <div class="entry">
+        <div class="when">SSLC · 75%</div>
+        <h4>Class X</h4>
+        <p>Tamil Nadu State Board.</p>
+      </div>
+    </div>
+    <div>
+      <div class="entry">
+        <div class="when">NPTEL</div>
+        <h4>Industry 4.0 &amp; Industrial IoT</h4>
+        <p>Eight-week certification on connected manufacturing systems.</p>
+      </div>
+      <div class="entry">
+        <div class="when">TechVolt · 2025</div>
+        <h4>Full Stack Development</h4>
+        <p>Three-month internship-track training on the modern web stack.</p>
+      </div>
+      <div class="entry">
+        <div class="when">IIT Bombay</div>
+        <h4>Python · HTML · C — Workshop Series</h4>
+        <p>Plus a focused PHP workshop. Foundations re-laid, sharper.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACHIEVEMENTS -->
+  <div class="section-head reveal">
+    <span class="num">v.</span><span class="rule"></span><span class="name">Distinctions</span>
+  </div>
+  <section class="two-col reveal">
+    <div>
+      <div class="entry">
+        <div class="when">National · Finalist</div>
+        <h4>India Women-Only Hackathon</h4>
+        <p>Reached the national finals among an all-women cohort of student developers.</p>
+      </div>
+      <div class="entry">
+        <div class="when">October 2023 · 1st Prize</div>
+        <h4>Think Outside The Box</h4>
+        <p>Won first place in an inter-college creative problem-solving contest.</p>
+      </div>
+    </div>
+    <div>
+      <div class="entry">
+        <div class="when">Sport</div>
+        <h4>Volleyball — Merit</h4>
+        <p>Played for the college team; awarded for sustained merit and presence on court.</p>
+      </div>
+      <div class="entry">
+        <div class="when">Service</div>
+        <h4>Rotaract Club Member</h4>
+        <p>Active in community service drives across Erode and the wider district.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- INTERESTS -->
+  <div class="section-head reveal">
+    <span class="num">vi.</span><span class="rule"></span><span class="name">Off-Hours</span>
+  </div>
+  <div class="interests reveal">
+    <p>
+      <span>Music</span><span class="sep">·</span><span>Drawing</span><span class="sep">·</span><span>Cinema</span><span class="sep">·</span><span>Gaming</span>
+    </p>
+  </div>
+
+  <!-- COLOPHON / CONTACT -->
+  <div class="section-head reveal" id="contact">
+    <span class="num">vii.</span><span class="rule"></span><span class="name">Correspondence</span>
+  </div>
+  <section class="colophon reveal">
+    <div class="block">
+      <div class="label">Write</div>
+      <div class="val"><a href="mailto:sriharini.dev.in@gmail.com">sriharini.dev.in@gmail.com</a></div>
+    </div>
+    <div class="block">
+      <div class="label">Call</div>
+      <div class="val"><a href="tel:+919865658292">+91 98656 58292</a></div>
+    </div>
+    <div class="block">
+      <div class="label">Find me</div>
+      <div class="val">Erode, Tamil Nadu — India</div>
+    </div>
+  </section>
+
+  <p class="imprint">Set in <span>Playfair Display</span> &amp; <span>EB Garamond</span>. Designed and assembled by Sri Harini R, MMXXVI.</p>
+
+</div>
+
+<script>
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+</body>
+</html>

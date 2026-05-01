@@ -1,0 +1,789 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sri Harini R · printed in two colors</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@400;500;700;800;900&family=Hanken+Grotesk:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --paper: #f4ead5;
+    --paper-deep: #ecdfc1;
+    --ink: #1a1612;
+    --ink-soft: #4a3f33;
+    --blue: #2647c4;
+    --blue-light: #4f6dd6;
+    --orange: #ff5722;
+    --orange-soft: #ff7a4f;
+    --green: #5a8a3a;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Hanken Grotesk', system-ui, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    font-weight: 400;
+    line-height: 1.55;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+  /* RISO GRAIN OVERLAY — strong noise like real risograph print */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    z-index: 50;
+    pointer-events: none;
+    opacity: 0.32;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.1   0 0 0 0 0.09   0 0 0 0 0.07   0 0 0 0.6 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    mix-blend-mode: multiply;
+  }
+  /* Paper warmth */
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    z-index: 49;
+    pointer-events: none;
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(74,63,51,0.12) 100%);
+  }
+
+  ::selection { background: var(--orange); color: var(--paper); }
+
+  a { color: inherit; text-decoration: none; }
+
+  /* HALFTONE PATTERN UTILITY */
+  .halftone-blue {
+    background-image: radial-gradient(var(--blue) 18%, transparent 19%);
+    background-size: 8px 8px;
+  }
+  .halftone-orange {
+    background-image: radial-gradient(var(--orange) 18%, transparent 19%);
+    background-size: 8px 8px;
+  }
+
+  /* Container */
+  .frame {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: clamp(1.25rem, 4vw, 3rem);
+    position: relative;
+    z-index: 2;
+  }
+
+  /* TOP RIBBON — looks like print run info */
+  .ribbon {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid var(--ink);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .ribbon .nav-l { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+  .ribbon .nav-l a { color: var(--ink-soft); transition: color 0.2s; }
+  .ribbon .nav-l a:hover { color: var(--orange); }
+  .ribbon .stamp { color: var(--blue); }
+
+  /* HERO — riso-overprint title */
+  .hero {
+    padding: clamp(2rem, 5vw, 4rem) 0 clamp(2.5rem, 6vw, 5rem);
+    position: relative;
+  }
+  .hero h1 {
+    font-family: 'Big Shoulders Display', sans-serif;
+    font-weight: 900;
+    font-size: clamp(4rem, 16vw, 14rem);
+    line-height: 0.85;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+    text-transform: uppercase;
+    position: relative;
+    margin: 0 0 1rem;
+  }
+  /* Mis-registered ghost layer — orange shifted */
+  .hero h1 .ghost {
+    position: absolute;
+    inset: 0;
+    color: var(--orange);
+    transform: translate(8px, 6px);
+    z-index: -1;
+    mix-blend-mode: multiply;
+    opacity: 0.85;
+  }
+  .hero h1 .ghost-blue {
+    position: absolute;
+    inset: 0;
+    color: var(--blue);
+    transform: translate(-6px, -4px);
+    z-index: -1;
+    mix-blend-mode: multiply;
+    opacity: 0.85;
+  }
+  .hero h1 .x { color: var(--orange); }
+
+  .hero .strip {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+  @media (min-width: 760px) { .hero .strip { grid-template-columns: 2fr 1fr; gap: 3rem; align-items: end; } }
+  .hero .lede {
+    font-size: clamp(1.05rem, 1.7vw, 1.4rem);
+    line-height: 1.45;
+    color: var(--ink);
+    max-width: 45ch;
+    font-weight: 500;
+  }
+  .hero .lede em {
+    font-family: 'Big Shoulders Display', sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    color: var(--blue);
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+  }
+  .hero .lede .or { color: var(--orange); font-style: italic; font-weight: 600; }
+  .hero .stamp-box {
+    border: 3px solid var(--ink);
+    padding: 1rem 1.2rem;
+    transform: rotate(-2deg);
+    background: var(--paper);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem;
+    line-height: 1.7;
+    color: var(--ink);
+    box-shadow: 6px 6px 0 var(--blue);
+    align-self: start;
+    justify-self: end;
+  }
+  .hero .stamp-box .lbl { color: var(--orange); font-weight: 500; letter-spacing: 0.15em; }
+  .hero .stamp-box strong { font-weight: 600; color: var(--ink); }
+
+  /* SECTION LABELS */
+  .sec {
+    margin: clamp(3rem, 6vw, 4.5rem) 0 clamp(1.2rem, 2.5vw, 2rem);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+  @media (min-width: 700px) {
+    .sec { grid-template-columns: auto 1fr auto; align-items: end; }
+  }
+  .sec .num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--orange);
+    letter-spacing: 0.18em;
+  }
+  .sec h2 {
+    font-family: 'Big Shoulders Display', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2.4rem, 6vw, 4.5rem);
+    line-height: 0.9;
+    letter-spacing: -0.015em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .sec h2 .or { color: var(--orange); }
+  .sec h2 .bl { color: var(--blue); font-style: italic; font-family: 'Hanken Grotesk', sans-serif; font-weight: 500; text-transform: lowercase; font-size: 0.7em; letter-spacing: -0.02em; }
+  .sec .meta {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  /* ABOUT */
+  .about {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  @media (min-width: 760px) { .about { grid-template-columns: 1.6fr 1fr; gap: 3rem; } }
+  .about p {
+    font-size: clamp(1rem, 1.4vw, 1.15rem);
+    line-height: 1.7;
+    color: var(--ink-soft);
+  }
+  .about p + p { margin-top: 1rem; }
+  .about .h { color: var(--ink); font-weight: 600; background: var(--orange); padding: 0 0.2em; }
+  .about .h-b { color: var(--paper); background: var(--blue); padding: 0 0.3em; font-weight: 600; }
+
+  .about .blob-box {
+    aspect-ratio: 1;
+    background: var(--blue);
+    color: var(--paper);
+    padding: 1.5rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+    border-radius: 0;
+  }
+  .about .blob-box::before {
+    content: '';
+    position: absolute;
+    width: 70%; height: 70%;
+    background: var(--orange);
+    border-radius: 50%;
+    bottom: -20%; right: -20%;
+    mix-blend-mode: multiply;
+    opacity: 0.95;
+  }
+  .about .blob-box .top {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    position: relative;
+    z-index: 2;
+  }
+  .about .blob-box .big {
+    font-family: 'Big Shoulders Display', sans-serif;
+    font-weight: 900;
+    font-size: clamp(2.6rem, 6vw, 5rem);
+    line-height: 0.9;
+    text-transform: uppercase;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* SKILLS — as overprinted stamps */
+  .skill-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 0.6rem;
+  }
+  .skill-stamp {
+    border: 2px solid var(--ink);
+    padding: 1rem 0.5rem;
+    text-align: center;
+    font-family: 'Big Shoulders Display', sans-serif;
+    font-weight: 700;
+    font-size: clamp(1rem, 1.6vw, 1.25rem);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    background: var(--paper);
+    color: var(--ink);
+    transform: rotate(-1deg);
+    transition: transform 0.25s, background 0.25s, color 0.25s;
+    box-shadow: 4px 4px 0 var(--blue);
+  }
+  .skill-stamp:nth-child(3n) { transform: rotate(1.5deg); box-shadow: 4px 4px 0 var(--orange); }
+  .skill-stamp:nth-child(4n) { transform: rotate(-2deg); }
+  .skill-stamp:nth-child(5n) { transform: rotate(0.8deg); box-shadow: 4px 4px 0 var(--green); }
+  .skill-stamp:hover { transform: rotate(0); background: var(--ink); color: var(--paper); box-shadow: 6px 6px 0 var(--orange); }
+
+  /* PROJECTS */
+  .projects { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+  @media (min-width: 760px) { .projects { grid-template-columns: 1fr 1fr; gap: 2rem; } }
+  .proj {
+    background: var(--paper-deep);
+    border: 3px solid var(--ink);
+    padding: clamp(1.5rem, 3vw, 2.2rem);
+    position: relative;
+    transition: transform 0.3s;
+  }
+  .proj:nth-child(1) { box-shadow: 10px 10px 0 var(--blue); }
+  .proj:nth-child(2) { box-shadow: 10px 10px 0 var(--orange); }
+  .proj:hover { transform: translate(-4px, -4px); }
+  .proj:nth-child(1):hover { box-shadow: 14px 14px 0 var(--blue); }
+  .proj:nth-child(2):hover { box-shadow: 14px 14px 0 var(--orange); }
+  .proj .head { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
+  .proj .num { font-family: 'DM Mono', monospace; font-size: 0.78rem; color: var(--ink-soft); letter-spacing: 0.18em; }
+  .proj .award {
+    background: var(--orange);
+    color: var(--paper);
+    padding: 0.25rem 0.7rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    transform: rotate(-2deg);
+    display: inline-block;
+  }
+  .proj:nth-child(2) .award { background: var(--blue); }
+  .proj h3 {
+    font-family: 'Big Shoulders Display', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 0.9;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .proj h3 .or { color: var(--orange); }
+  .proj h3 .bl { color: var(--blue); }
+  .proj p { font-size: 0.95rem; line-height: 1.6; color: var(--ink-soft); max-width: 42ch; }
+  .proj .tags { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 1rem; font-family: 'DM Mono', monospace; font-size: 0.72rem; }
+  .proj .tags span { padding: 0.18rem 0.55rem; background: var(--paper); border: 1px solid var(--ink); }
+
+  /* TIMELINE / EDU + CERT */
+  .twin {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  @media (min-width: 760px) { .twin { grid-template-columns: 1fr 1fr; gap: 3rem; } }
+  .twin h3 {
+    font-family: 'Big Shoulders Display', sans-serif;
+    font-weight: 700;
+    font-size: 1.3rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--blue);
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 0.6rem;
+    margin-bottom: 1rem;
+  }
+  .twin .col:nth-child(2) h3 { color: var(--orange); }
+  .twin .item {
+    padding: 1rem 0;
+    border-bottom: 1px dashed var(--ink-soft);
+  }
+  .twin .item:last-child { border-bottom: none; }
+  .twin .item .when {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--orange);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.3rem;
+  }
+  .twin .col:nth-child(2) .item .when { color: var(--blue); }
+  .twin .item h4 {
+    font-family: 'Big Shoulders Display', sans-serif;
+    font-weight: 700;
+    font-size: 1.2rem;
+    line-height: 1.1;
+    text-transform: uppercase;
+    margin-bottom: 0.2rem;
+  }
+  .twin .item p { font-size: 0.9rem; color: var(--ink-soft); line-height: 1.5; }
+
+  /* ACHIEVEMENTS */
+  .ach {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  @media (min-width: 760px) { .ach { grid-template-columns: 1fr 1fr; } }
+  .ach .item {
+    border: 3px solid var(--ink);
+    padding: 1.2rem;
+    background: var(--paper);
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 1rem;
+    align-items: start;
+    position: relative;
+  }
+  .ach .item .badge {
+    width: 64px; height: 64px;
+    background: var(--orange);
+    color: var(--paper);
+    display: grid;
+    place-items: center;
+    font-family: 'Big Shoulders Display', sans-serif;
+    font-weight: 900;
+    font-size: 2rem;
+    border: 2px solid var(--ink);
+  }
+  .ach .item:nth-child(2) .badge { background: var(--blue); }
+  .ach .item:nth-child(3) .badge { background: var(--green); }
+  .ach .item:nth-child(4) .badge { background: var(--ink); color: var(--orange); }
+  .ach .item .when { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--ink-soft); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.3rem; }
+  .ach .item h4 { font-family: 'Big Shoulders Display', sans-serif; font-weight: 700; font-size: 1.2rem; line-height: 1.1; text-transform: uppercase; margin-bottom: 0.3rem; }
+  .ach .item p { font-size: 0.9rem; color: var(--ink-soft); line-height: 1.5; }
+
+  /* INTERESTS */
+  .ints {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+    border: 3px solid var(--ink);
+  }
+  @media (min-width: 700px) { .ints { grid-template-columns: repeat(4, 1fr); } }
+  .int {
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    text-align: center;
+    border-right: 3px solid var(--ink);
+    border-bottom: 3px solid var(--ink);
+    position: relative;
+    overflow: hidden;
+  }
+  @media (min-width: 700px) { .int:nth-child(4) { border-right: none; } .int { border-bottom: none; } }
+  .int:last-child { border-right: none; }
+  .int:nth-child(1) { background: var(--blue); color: var(--paper); }
+  .int:nth-child(2) { background: var(--orange); color: var(--paper); }
+  .int:nth-child(3) { background: var(--paper); }
+  .int:nth-child(4) { background: var(--green); color: var(--paper); }
+  .int::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(0,0,0,0.18) 12%, transparent 13%);
+    background-size: 10px 10px;
+    opacity: 0.4;
+    mix-blend-mode: multiply;
+  }
+  .int .ico {
+    font-family: 'Big Shoulders Display', sans-serif;
+    font-size: clamp(3rem, 7vw, 5rem);
+    line-height: 0.9;
+    margin-bottom: 0.4rem;
+    position: relative;
+    font-weight: 900;
+  }
+  .int .lbl {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    position: relative;
+  }
+
+  /* CONTACT */
+  .contact {
+    margin-top: clamp(3rem, 6vw, 5rem);
+    padding: clamp(2.5rem, 5vw, 4rem);
+    border: 3px solid var(--ink);
+    background: var(--paper-deep);
+    position: relative;
+    overflow: hidden;
+  }
+  .contact::before {
+    content: '';
+    position: absolute;
+    width: 350px; height: 350px;
+    background-image: radial-gradient(var(--orange) 18%, transparent 19%);
+    background-size: 14px 14px;
+    top: -100px; right: -100px;
+    opacity: 0.4;
+    mix-blend-mode: multiply;
+  }
+  .contact h3 {
+    font-family: 'Big Shoulders Display', sans-serif;
+    font-weight: 900;
+    font-size: clamp(2.4rem, 7vw, 5.5rem);
+    line-height: 0.9;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    position: relative;
+    color: var(--ink);
+  }
+  .contact h3 .or { color: var(--orange); }
+  .contact h3 .bl { color: var(--blue); }
+  .contact .lede { font-size: 1rem; color: var(--ink-soft); max-width: 50ch; margin-bottom: 2rem; line-height: 1.55; position: relative; }
+  .contact .links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    position: relative;
+    margin-bottom: 1.5rem;
+  }
+  .contact .links a {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 0;
+    border-top: 1px solid var(--ink);
+    font-family: 'Big Shoulders Display', sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.05rem, 2vw, 1.4rem);
+    text-transform: uppercase;
+    color: var(--ink);
+    transition: padding 0.3s, color 0.3s;
+  }
+  .contact .links a:last-child { border-bottom: 1px solid var(--ink); }
+  .contact .links a:hover { padding-left: 0.5rem; color: var(--orange); }
+  .contact .links a .k { color: var(--blue); font-family: 'DM Mono', monospace; font-size: 0.78rem; letter-spacing: 0.15em; align-self: center; }
+
+  /* COLOPHON */
+  footer {
+    margin-top: 2.5rem;
+    padding: 1.5rem 0 1rem;
+    border-top: 2px solid var(--ink);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  footer .or { color: var(--orange); }
+  footer .bl { color: var(--blue); }
+
+  /* BACK */
+  .back {
+    position: fixed;
+    bottom: 1.2rem; right: 1.2rem;
+    z-index: 60;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 0.6rem 1rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    border: 2px solid var(--ink);
+    transition: all 0.2s;
+  }
+  .back:hover { background: var(--orange); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .skill-stamp, .proj, .contact .links a { transition: none; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<a class="back" href="index.html">◀ INDEX</a>
+
+<div class="frame">
+
+  <!-- RIBBON -->
+  <header class="ribbon">
+    <div class="nav-l">
+      <a href="#about">about</a>
+      <a href="#skills">stack</a>
+      <a href="#work">work</a>
+      <a href="#contact">say hi</a>
+    </div>
+    <div>edition <span style="color:var(--orange);">№ 07</span> &middot; printed in two colors</div>
+    <div class="stamp">RUN OF 1 &middot; HAND PULLED</div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <h1>
+      <span class="ghost">SRI HARINI</span>
+      <span class="ghost-blue">SRI HARINI</span>
+      SRI HARINI<span class="x">.</span>
+    </h1>
+    <div class="strip">
+      <p class="lede">
+        <em>Junior</em> software <em>developer</em> based in Erode, Tamil Nadu. Final-year B.Tech IT at Velalar College, Anna University &mdash; <span class="or">CGPA 8.0</span>. I write Java, JavaScript, Python, and a little Flutter when an app deserves to feel snappy.
+      </p>
+      <div class="stamp-box">
+        <div><span class="lbl">DATE</span> · <strong>2026</strong></div>
+        <div><span class="lbl">LOC</span> · <strong>ERODE, IN</strong></div>
+        <div><span class="lbl">EDITION</span> · <strong>I / VII</strong></div>
+        <div><span class="lbl">STATUS</span> · <strong>OPEN TO HIRE</strong></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section>
+    <div class="sec" id="about">
+      <span class="num">// 01 ─────────</span>
+      <h2>WHAT I <span class="or">DO</span></h2>
+      <span class="meta">read time · 30s</span>
+    </div>
+    <div class="about">
+      <div>
+        <p>Final-year IT student at <span class="h">Velalar College of Engineering</span>, Anna University &mdash; graduating <span class="h-b">2025</span>. My happy place is somewhere between Java and JavaScript, with detours into Python and a soft spot for Flutter when something needs to feel snappy on a phone.</p>
+        <p>Won "Best Project" with a contact-management system in pure C, finalist'd a national women-only hackathon, took first prize at <span class="h">Think Outside The Box</span>. Outside of code: I draw, listen, watch, and play. The pattern-finding reflex that makes me good at debugging is what makes a film, a melody, or a well-designed game feel like home.</p>
+        <p>Looking for: junior dev roles, internships, small interesting problems.</p>
+      </div>
+      <div class="blob-box">
+        <div class="top">CGPA / 10</div>
+        <div class="big">8.0<br/>/ B.TECH IT</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section>
+    <div class="sec" id="skills">
+      <span class="num">// 02 ─────────</span>
+      <h2><span class="or">STACK</span> &amp; TOOLS</h2>
+      <span class="meta">13 stamps</span>
+    </div>
+    <div class="skill-grid">
+      <div class="skill-stamp">Java</div>
+      <div class="skill-stamp">Python</div>
+      <div class="skill-stamp">JavaScript</div>
+      <div class="skill-stamp">C / C++</div>
+      <div class="skill-stamp">HTML</div>
+      <div class="skill-stamp">CSS</div>
+      <div class="skill-stamp">Node.js</div>
+      <div class="skill-stamp">React Native</div>
+      <div class="skill-stamp">Flutter</div>
+      <div class="skill-stamp">VS Code</div>
+      <div class="skill-stamp">Figma</div>
+      <div class="skill-stamp">Git</div>
+      <div class="skill-stamp">MS Office</div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section>
+    <div class="sec" id="work">
+      <span class="num">// 03 ─────────</span>
+      <h2>SELECTED <span class="bl">work.</span></h2>
+      <span class="meta">2 of 2</span>
+    </div>
+    <div class="projects">
+      <article class="proj">
+        <div class="head"><span class="num">№ 01 · 2022—23</span><span class="award">★ Best project</span></div>
+        <h3>Contact <span class="or">MGMT</span> System</h3>
+        <p>A console contact directory in pure C with file-based persistence. Add, search, edit, delete, serialize records to disk. Where I learned to take memory seriously.</p>
+        <div class="tags"><span>C</span><span>file_io</span><span>cli</span></div>
+      </article>
+      <article class="proj">
+        <div class="head"><span class="num">№ 02 · Apr 2023</span><span class="award">◆ College expo</span></div>
+        <h3><span class="bl">Music</span> Website</h3>
+        <p>Static music-discovery site for the college expo &mdash; curated playlists, artist pages, embedded player. The thing I love most finding its way into what I build.</p>
+        <div class="tags"><span>HTML</span><span>CSS</span><span>JS</span></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- STUDIES -->
+  <section>
+    <div class="sec">
+      <span class="num">// 04 ─────────</span>
+      <h2>STUDIES &amp; <span class="or">CERTS</span></h2>
+      <span class="meta">3 + 3</span>
+    </div>
+    <div class="twin">
+      <div class="col">
+        <h3>Education</h3>
+        <div class="item">
+          <div class="when">2021—2025 · Erode</div>
+          <h4>B.Tech, Information Technology</h4>
+          <p>Velalar College of Engineering &amp; Tech, Anna University. CGPA 8.0.</p>
+        </div>
+        <div class="item">
+          <div class="when">HSC · 82%</div>
+          <h4>Class XII</h4>
+          <p>Tamil Nadu State Board.</p>
+        </div>
+        <div class="item">
+          <div class="when">SSLC · 75%</div>
+          <h4>Class X</h4>
+          <p>Tamil Nadu State Board.</p>
+        </div>
+      </div>
+      <div class="col">
+        <h3>Certifications</h3>
+        <div class="item">
+          <div class="when">NPTEL</div>
+          <h4>Industry 4.0 &amp; IIoT</h4>
+          <p>Eight-week program on connected manufacturing.</p>
+        </div>
+        <div class="item">
+          <div class="when">TechVolt · 2025</div>
+          <h4>Full Stack Development</h4>
+          <p>Three-month internship-track training, modern web stack.</p>
+        </div>
+        <div class="item">
+          <div class="when">IIT Bombay</div>
+          <h4>Python · HTML · C — Workshops</h4>
+          <p>Plus a focused PHP workshop. Foundations re-laid sharper.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACHIEVEMENTS -->
+  <section>
+    <div class="sec">
+      <span class="num">// 05 ─────────</span>
+      <h2>WINS &amp; <span class="bl">badges</span></h2>
+      <span class="meta">04 logged</span>
+    </div>
+    <div class="ach">
+      <div class="item">
+        <div class="badge">★</div>
+        <div>
+          <div class="when">National · Finalist</div>
+          <h4>India Women-Only Hackathon</h4>
+          <p>Reached the national finals among an all-women cohort of student devs.</p>
+        </div>
+      </div>
+      <div class="item">
+        <div class="badge">1</div>
+        <div>
+          <div class="when">Oct 2023 · 1st</div>
+          <h4>Think Outside The Box</h4>
+          <p>First place in an inter-college creative problem-solving contest.</p>
+        </div>
+      </div>
+      <div class="item">
+        <div class="badge">✦</div>
+        <div>
+          <div class="when">Sport · Merit</div>
+          <h4>Volleyball</h4>
+          <p>College team, awarded for sustained merit on court.</p>
+        </div>
+      </div>
+      <div class="item">
+        <div class="badge">♥</div>
+        <div>
+          <div class="when">Service</div>
+          <h4>Rotaract Club Member</h4>
+          <p>Active in community drives across Erode and the district.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INTERESTS -->
+  <section>
+    <div class="sec">
+      <span class="num">// 06 ─────────</span>
+      <h2>OFF-CLOCK</h2>
+      <span class="meta">04</span>
+    </div>
+    <div class="ints">
+      <div class="int"><div class="ico">♪</div><div class="lbl">music</div></div>
+      <div class="int"><div class="ico">✎</div><div class="lbl">drawing</div></div>
+      <div class="int"><div class="ico">▶</div><div class="lbl">cinema</div></div>
+      <div class="int"><div class="ico">◉</div><div class="lbl">gaming</div></div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <h3>WORK<br/><span class="or">WITH</span> <span class="bl">ME.</span></h3>
+    <p class="lede">Hiring junior devs, working on something interesting, or just want to swap film recs &mdash; my inbox is open.</p>
+    <div class="links">
+      <a href="mailto:sriharini.dev.in@gmail.com"><span class="k">EMAIL</span><span>sriharini.dev.in@gmail.com</span></a>
+      <a href="tel:+919865658292"><span class="k">PHONE</span><span>+91 98656 58292</span></a>
+      <a href="#"><span class="k">CITY</span><span>ERODE, TAMIL NADU</span></a>
+    </div>
+  </section>
+
+  <footer>
+    <div>© 2026 SRI HARINI R</div>
+    <div><span class="bl">●</span> RISO BLUE 2647C4 &middot; <span class="or">●</span> RISO ORANGE FF5722</div>
+    <div>SET IN BIG SHOULDERS + HANKEN GROTESK</div>
+  </footer>
+
+</div>
+
+</body>
+</html>
